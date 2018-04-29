@@ -1,0 +1,322 @@
+/* ------------- Base ------------- */
+
+body {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+img {
+    max-width: 100%;
+}
+
+h3 {
+    margin-top: 14px;
+    margin-bottom: 14px;
+
+    color: rgb(249, 249, 249);
+    font-size: 16px;
+    text-align: center;
+
+    flex-basis: 100%;
+}
+
+li {
+    list-style: none;
+}
+
+
+/*------------------  Animations -------------------*/ 
+
+@keyframes spin {
+    0% {transform: rotate(0deg)}
+    100% {transform: rotate(360deg)}
+}
+
+@keyframes popopen {
+    0% {
+        transform: scale(0);
+    }
+    70% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/*------------------  Avatar Component -------------------*/ 
+
+.avatar-selector {
+    position: relative;
+    display: flex;
+    flex-flow: column wrap;
+    align-content: center;
+    align-items: center;
+
+    padding-top: 4em;
+}
+
+/* The Avatar popdown */
+.avatar-popdown {
+    position: relative;
+
+    display: flex;
+    flex-flow: row wrap;
+
+    width: 280px;
+
+    padding: 11px; /* The rest of the required padding comes from the border/margin on the avatars */
+
+    border-radius: 2px;
+    background-color: rgb(44, 48, 51);
+    box-shadow: 0 0 10px 2px rgb(102, 102, 102);
+
+    /* Hidden state */
+    transform: scale(0);
+}
+
+    .avatar-popdown:not(.-is-active) {
+        transition: 0.2s transform ease;
+    }
+
+    /* The arrow/angle on the top */
+    .avatar-popdown::before {
+        content: ' ';
+        width: 0;
+        height: 0;
+
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%); /* Center the angle */
+
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 8px solid rgb(44, 48, 51);
+    }
+
+    /* Popdown active state */
+    .avatar-popdown.-is-active{
+        animation: 0.25s popopen linear;
+        transform: scale(1);
+    }
+
+
+    /* The avatars */
+
+    .avatar {
+        position: relative;
+        z-index: 2;
+
+        margin-bottom: 14px;
+
+        box-sizing: border-box;
+
+        border: 3px solid transparent;
+
+        outline: none;
+    }
+
+    .avatar-main {
+        position: relative;
+        margin-bottom: 0;
+
+        border-radius: 50%;
+    }
+
+        .avatar-img-mask {
+            width: 54px; /* + 3px border * 2 = 60px */
+            height: 54px; /* + 3px border * 2 = 60px */
+
+            overflow: hidden;
+
+            border-radius: 50%;
+            background-color: rgba(122, 161, 178, 0.2);
+
+            cursor: pointer;
+        }
+
+
+        /* Exclude the FIRST and 5TH avatars, so the left-paddings are accounted for */
+        .avatar:not(:first-of-type):not(:nth-of-type(5n)) {
+            margin-left: 13px; /* One more pixel pushes the last item over the edge...*/
+        }
+
+        
+/*------------------  Avatar States -------------------*/ 
+
+        /* The SELECTED avatar */
+        .avatar-main .avatar-img-mask:hover,
+        .avatar-main .avatar-img-mask:focus,
+        .avatar-main .avatar-img-mask:active {
+            box-shadow: 0 0 0 1px rgb(155, 160, 163);
+        }
+
+        
+
+        /* The avatar state manages ACTIVE, HOVER, and LOADING states */
+        .avatar-state {
+            position: absolute;
+            z-index: 3;
+            left: -3px;
+            top: -3px;
+            width: 100%;
+            height: 100%;
+
+            border-radius: 50%;
+            border: 3px solid transparent;
+
+            cursor: pointer;
+        }
+
+
+        /* The hover/focus state */
+        .avatar-popdown .avatar:not(.-is-loading):not(.-is-active):hover .avatar-state,
+        .avatar-popdown .avatar:not(.-is-loading):not(.-is-active):focus .avatar-state {
+            background-color: rgba(122, 161, 178, 0.2);
+            border-color: rgb(155, 160, 163);
+        }
+
+        /* The active state */
+        .avatar.-is-active .avatar-state {
+            border-color: rgb(122, 161, 178);
+        }
+        /* The loading state */
+        .avatar.-is-loading .avatar-state {
+            border: 3px solid rgb(122, 161, 178);
+            border-radius: 50%;
+            border-right-color: transparent;
+
+            animation: spin 1s linear infinite;
+
+            cursor: wait;
+        }
+
+
+
+
+/*--------------------------- Welcome bubble ----------------------- */
+
+.welcome-bubble {
+    position: absolute;
+    top: 0;
+    left: calc(100% + 1em);
+
+    width: 240px;
+
+    padding-top: 14px;
+    padding-bottom: 28px;
+    padding-left: 14px;
+    padding-right: 14px;
+
+    background-color: rgb(122, 161, 178);
+    border-radius: 12px;
+
+    white-space: nowrap;
+    font-size: 12px;
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: 0.25px;
+
+    /* Hidden state */
+    transform: scale(0);
+}
+
+    /* Welcome bubble states */
+    .welcome-bubble.-is-active {
+        display: block;
+
+        animation: 0.25s popopen linear;
+        transform: scale(1);
+    }
+    .welcome-bubble.-is-hidden {
+        display: none;
+    }
+
+    .welcome-bubble .btn-clear {
+        position: absolute;
+        z-index: 2;
+        bottom: 14px;
+        left: 10px;
+
+        appearance: none;
+
+        border: 0;
+        background-color: transparent;
+
+        color: currentColor;
+        text-decoration: underline;
+
+        cursor: pointer;
+
+    }
+
+    /* The pointy part on the speech bubble */
+    .welcome-bubble::before {
+        content: ' ';
+        width: 0;
+        height: 0;
+
+        position: absolute;
+        top: 50%;
+        left: -8px;
+        transform: translateY(-50%); /* Center the angle */
+
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid transparent;
+        border-right: 8px solid rgb(122, 161, 178);
+    }
+
+
+/* The speech animation */
+@keyframes welcome {
+    0%  {content: 'W'}
+    2% {content: 'We'}
+    4% {content: 'Wel'}
+    6% {content: 'Welc'}
+    8% {content: 'Welco'}
+    10% {content: 'Welcom'}
+    12% {content: 'Welcome'}
+    14% {content: 'Welcome!'}
+
+    20% {content: 'Welcome! C'}
+    22% {content: 'Welcome! Cl'}
+    24% {content: 'Welcome! Cli'}
+    26% {content: 'Welcome! Clic'}
+    28% {content: 'Welcome! Click'}
+    
+    34% {content: 'Welcome! Click m'}
+    36% {content: 'Welcome! Click me'}
+    
+    42% {content: 'Welcome! Click me t'}
+    44% {content: 'Welcome! Click me to'}
+
+    52% {content: 'Welcome! Click me to s'}
+    54% {content: 'Welcome! Click me to se'}
+    56% {content: 'Welcome! Click me to sel'}
+    58% {content: 'Welcome! Click me to sele'}
+    60% {content: 'Welcome! Click me to selec'}
+    62% {content: 'Welcome! Click me to select'}
+
+    68% {content: 'Welcome! Click me to select y'}
+    70% {content: 'Welcome! Click me to select yo'}
+    72% {content: 'Welcome! Click me to select you'}
+    74% {content: 'Welcome! Click me to select your'}
+
+    80% {content: 'Welcome! Click me to select your a'}
+    82% {content: 'Welcome! Click me to select your av'}
+    84% {content: 'Welcome! Click me to select your ava'}
+    86% {content: 'Welcome! Click me to select your avat'}
+    88% {content: 'Welcome! Click me to select your avata'}
+    90% {content: 'Welcome! Click me to select your avatar'}
+    92% {content: 'Welcome! Click me to select your avatar.'}
+}
+
+.welcome-bubble::after {
+    content: 'Welcome! Click me to select your avatar.';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    animation: 4s welcome linear;
+}
+
